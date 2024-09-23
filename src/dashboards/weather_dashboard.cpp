@@ -14,12 +14,20 @@ WeatherDashboard::WeatherDashboard(ScreenManager *screenManager, UILib *uiLib) :
 void WeatherDashboard::init(uint8_t screenIndex)
 {
     this->screenIndex = screenIndex;
+    // getCurrentWeatherData();
     draw();
     Serial.println("Weather Dashboard initialized.");
 }
 
 void WeatherDashboard::update()
 {
+    unsigned long currentTime = millis();
+
+    if (currentTime - lastCurrentWeatherUpdate > currentWeatherInterval)
+    {
+        // getCurrentWeatherData();
+        redrawCurrentWeather();
+    }
 }
 
 void WeatherDashboard::handleInput(InputEvent event)
@@ -43,16 +51,14 @@ void WeatherDashboard::draw()
     screenManager->selectScreen(screenIndex);
     uiLib->centerIconX(0, CLOUD_WIDTH, CLOUD_HEIGHT, cloud);
 
+    drawCurrentWeather();
     drawWeatherOutlook();
-    // fetchCurrentWeatherData();
 }
 
 void WeatherDashboard::drawWeatherOutlook()
 {
     int absCenter = TFT_WIDTH / 2;
     int weatherCenter = absCenter - 56;
-    int currentWeatherY = 40;
-    drawCurrentWeather(absCenter, currentWeatherY, "65", "20");
 
     int futureWeatherY = 115;
     drawHourly(weatherCenter, futureWeatherY, "70", "0", sunny);
@@ -64,15 +70,38 @@ void WeatherDashboard::drawWeatherOutlook()
     drawHourly(weatherCenter, futureWeatherY, "89", "15", sunny);
 }
 
-void WeatherDashboard::drawCurrentWeather(int x, int y, String temp, String precip)
+void WeatherDashboard::drawCurrentWeather()
 {
+    int absCenter = TFT_WIDTH / 2;
+    int currentWeatherY = 40;
+
     screenManager->getScreen()->loadFont(NOTO_BOLD_48);
 
-    String tempLabel = temp + "°";
+    String tempLabel;
+    if (!(currentWeatherData.size() > 0))
+    {
+        tempLabel = "--°";
+    }
+    else
+    {
+        tempLabel = currentWeatherData[0] + "°";
+    }
 
     int textHeight = screenManager->getScreen()->fontHeight();
     int textWidth = screenManager->getScreen()->textWidth(tempLabel);
-    uiLib->drawLabel(x - (textWidth / 2), y + (textHeight / 2), tempLabel, TFT_WHITE, 3);
+
+    uiLib->drawLabel(absCenter - (textWidth / 2), currentWeatherY + (textHeight / 2), tempLabel, TFT_WHITE, 3);
+}
+
+void WeatherDashboard::redrawCurrentWeather()
+{
+    screenManager->getScreen()->loadFont(NOTO_BOLD_48);
+
+    int textHeight = screenManager->getScreen()->fontHeight();
+
+    screenManager->selectScreen(screenIndex);
+    uiLib->clearArea(0, 40, TFT_WIDTH, textHeight);
+    drawCurrentWeather();
 }
 
 void WeatherDashboard::drawHourly(int x, int y, String temp, String precip, const unsigned short *iconData)
@@ -84,4 +113,16 @@ void WeatherDashboard::drawHourly(int x, int y, String temp, String precip, cons
     uiLib->drawIcon(x, y, SUNNY_WIDTH, SUNNY_HEIGHT, iconData); // All small icons same size
     uiLib->drawLabel(x + tempOffset, y + (textHeight / 2), temp + "°", TFT_WHITE, 1);
     uiLib->drawLabel(x + precipOffset, y + (textHeight / 2), precip + "%", TFT_WHITE, 1);
+}
+
+void WeatherDashboard::getCurrentWeatherData()
+{
+    currentWeatherData = fetchCurrentWeatherData();
+    lastCurrentWeatherUpdate = millis();
+}
+
+void WeatherDashboard::getFutureWeatherData()
+{
+    // futureWeatherData = fetchFutureWeatherData();
+    // lastFutureWeatherUpdate = millis();
 }

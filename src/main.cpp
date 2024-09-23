@@ -9,6 +9,7 @@
 #include "dashboards/music_dashboard.h"
 #include "dashboards/weather_dashboard.h"
 #include "dashboards/clock_dashboard.h"
+#include "dashboards/none_dashboard.h"
 #include <wifi_client.h>
 
 ScreenManager screenManager;
@@ -67,7 +68,7 @@ void initializeDashboards()
     case 0:
       Serial.println("None");
       // uiLib.drawLabel(120, 120, "None", TFT_WHITE, 2);
-      dashboards[i] = new MusicDashboard(&screenManager, &uiLib);
+      dashboards[i] = new NoneDashboard(&screenManager, &uiLib);
       break;
     case 1:
       Serial.println("Clock");

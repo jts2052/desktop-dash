@@ -2,6 +2,8 @@
 #include "../images/clock.h"
 #include "wifi_client.h"
 
+#define TEXT_SIZE 4
+
 ClockDashboard::ClockDashboard(ScreenManager *screenManager, UILib *uiLib) : Dashboard(screenManager)
 {
     this->screenManager = screenManager;
@@ -44,12 +46,24 @@ void ClockDashboard::draw()
 {
     screenManager->selectScreen(screenIndex);
     uiLib->centerIconX(0, CLOCK_WIDTH, CLOCK_HEIGHT, clock_i);
-    timePosition = uiLib->centerTextX(TFT_HEIGHT / 2, lastTime, TFT_WHITE, 3);
+
+    uiLib->loadNotoFont(TEXT_SIZE);
+
+    uint8_t textHeight = screenManager->getScreen()->fontHeight();
+    uint8_t textCenterY = (TFT_HEIGHT - textHeight) / 2 + 24;
+
+    timePosition = uiLib->centerTextX(textCenterY, lastTime, TFT_WHITE, TEXT_SIZE);
 }
 
 void ClockDashboard::redrawTime()
 {
     screenManager->selectScreen(screenIndex);
-    uiLib->clearArea((TFT_WIDTH - 2 * timePosition.first), timePosition.second, TFT_WIDTH, screenManager->getScreen()->fontHeight());
-    timePosition = uiLib->centerTextX(TFT_HEIGHT / 2, lastTime, TFT_WHITE, 3);
+    uiLib->clearArea(0, timePosition.second, TFT_WIDTH, screenManager->getScreen()->fontHeight());
+
+    uiLib->loadNotoFont(TEXT_SIZE);
+
+    uint8_t textHeight = screenManager->getScreen()->fontHeight();
+    uint8_t textCenterY = (TFT_HEIGHT - textHeight) / 2 + 24;
+
+    timePosition = uiLib->centerTextX(textCenterY, lastTime, TFT_WHITE, TEXT_SIZE);
 }

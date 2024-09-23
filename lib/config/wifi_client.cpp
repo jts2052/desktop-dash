@@ -101,7 +101,6 @@ std::vector<String> fetchCurrentWeatherData()
     {
         String response = http.getString();
 
-        // DynamicJsonDocument jsonDoc(8192);
         JsonDocument jsonDoc;
         DeserializationError error = deserializeJson(jsonDoc, response);
 
@@ -117,9 +116,9 @@ std::vector<String> fetchCurrentWeatherData()
         if (!dataArray.isNull())
         {
             JsonObject firstInterval = dataArray["values"];
-            String temperature = firstInterval["temperature"].as<String>();
-            String humidity = firstInterval["humidity"].as<String>();
-            String precipitation = firstInterval["precipitationProbability"].as<String>();
+            String temperature = firstInterval["temperature"].as<String>().substring(0, 2);
+            String humidity = firstInterval["humidity"].as<String>().substring(0, 2);
+            String precipitation = firstInterval["precipitationProbability"].as<String>().substring(0, 2);
 
             std::vector<String> weatherData = {temperature, humidity, precipitation};
             return weatherData;

@@ -3,6 +3,7 @@
 #include "NotoSansBold15.h"
 #include "NotoSansBold36.h"
 #include "NotoSansBold48.h"
+#include "NotoSansBold72.h"
 
 // WiFi
 #define WIFI_SSID "Treehouse 2.4"
@@ -41,7 +42,7 @@
 #define API_KEY "pYO9LNlynWkrC36DvAx3aC3v7qZnNGQ1"
 #define USE_METRIC false
 #define USE_LAT_LON true
-#define LOCATION ""
+#define LOCATION "x"
 #define LATITUDE "39.166592"
 #define LONGITUDE "-86.534889"
 #define USE_HOURLY_FORECAST false // True for hourly, false for daily
@@ -59,3 +60,4 @@
 #define NOTO_BOLD_15 NotoSansBold15
 #define NOTO_BOLD_36 NotoSansBold36
 #define NOTO_BOLD_48 NotoSansBold48
+#define NOTO_BOLD_72 NotoSansBold72

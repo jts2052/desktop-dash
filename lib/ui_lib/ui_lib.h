@@ -9,6 +9,7 @@ class UILib
 public:
     UILib(ScreenManager *screenManager);
     void drawButton(int x, int y, int w, int h, const char *label, uint16_t color, uint16_t bgColor);
+    void loadNotoFont(uint8_t textSize);
     void drawLabel(int x, int y, String text, uint16_t color, uint8_t textSize);
     void drawIcon(int x, int y, int width, int height, const unsigned short *iconData);
     void drawImageRow(int x, int y, int w, int h, const unsigned short *images[], int numImages);
@@ -17,6 +18,7 @@ public:
     std::pair<int, int> centerIconY(int x, int elementWidth, int elementHeight, const unsigned short *image);
     std::pair<int, int> centerTextX(int y, String text, uint16_t color, uint8_t textSize);
     std::pair<int, int> centerTextY(int x, String text, uint16_t color, uint8_t textSize);
+    std::pair<int, int> centerTextXY(String text, uint16_t color, uint8_t textSize);
     void clearArea(int x, int y, int w, int h);
 
 private:

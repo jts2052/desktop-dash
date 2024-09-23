@@ -29,15 +29,11 @@ void UILib::drawButton(int x, int y, int w, int h, const char *label, uint16_t c
 }
 
 /**
- * Draw a label on the screen
+ * Load a font for the screen
  *
- * @param x The x coordinate of the top-left corner of the label
- * @param y The y coordinate of the top-left corner of the label
- * @param text The text to display
- * @param color The color of the text
  * @param textSize The size of the text
  */
-void UILib::drawLabel(int x, int y, String text, uint16_t color, uint8_t textSize)
+void UILib::loadNotoFont(uint8_t textSize)
 {
     switch (textSize)
     {
@@ -50,7 +46,24 @@ void UILib::drawLabel(int x, int y, String text, uint16_t color, uint8_t textSiz
     case 3:
         currentScreen->loadFont(NOTO_BOLD_48);
         break;
+    case 4:
+        currentScreen->loadFont(NOTO_BOLD_72);
+        break;
     }
+}
+
+/**
+ * Draw a label on the screen
+ *
+ * @param x The x coordinate of the top-left corner of the label
+ * @param y The y coordinate of the top-left corner of the label
+ * @param text The text to display
+ * @param color The color of the text
+ * @param textSize The size of the text
+ */
+void UILib::drawLabel(int x, int y, String text, uint16_t color, uint8_t textSize)
+{
+    loadNotoFont(textSize);
     currentScreen->setTextColor(color);
     currentScreen->drawString(text, x, y);
 }
@@ -110,8 +123,7 @@ std::pair<int, int> UILib::centerIconY(int x, int elementWidth, int elementHeigh
 
 std::pair<int, int> UILib::centerTextX(int y, String text, uint16_t color, uint8_t textSize)
 {
-    currentScreen->setTextColor(color);
-    currentScreen->loadFont(NOTO_BOLD_48);
+    loadNotoFont(textSize);
 
     uint16_t textWidth = currentScreen->textWidth(text);
 
@@ -124,9 +136,7 @@ std::pair<int, int> UILib::centerTextX(int y, String text, uint16_t color, uint8
 
 std::pair<int, int> UILib::centerTextY(int x, String text, uint16_t color, uint8_t textSize)
 {
-    currentScreen->setTextColor(color);
-    currentScreen->setTextSize(textSize);
-    currentScreen->loadFont(NOTO_BOLD_36);
+    loadNotoFont(textSize);
 
     uint16_t textHeight = currentScreen->fontHeight();
 
@@ -135,6 +145,21 @@ std::pair<int, int> UILib::centerTextY(int x, String text, uint16_t color, uint8
     currentScreen->drawString(text, x, centerY);
 
     return std::make_pair(x, centerY);
+}
+
+std::pair<int, int> UILib::centerTextXY(String text, uint16_t color, uint8_t textSize)
+{
+    loadNotoFont(textSize);
+
+    uint16_t textWidth = currentScreen->textWidth(text);
+    uint16_t textHeight = currentScreen->fontHeight();
+
+    int centerX = (TFT_WIDTH - textWidth) / 2;
+    int centerY = (TFT_HEIGHT - textHeight) / 2;
+
+    currentScreen->drawString(text, centerX, centerY);
+
+    return std::make_pair(centerX, centerY);
 }
 
 /**
